@@ -1,0 +1,14 @@
+.orders-list { display: flex; flex-direction: column; gap: 12px; }
+.order-row { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.order-row-main { display: flex; flex-direction: column; gap: 10px; }
+.order-row-id { font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; margin-right: 12px; }
+.order-row-date { font-size: 13px; color: var(--text-muted); }
+.order-row-items { display: flex; align-items: center; gap: 6px; }
+.order-thumb { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border); }
+.order-item-count { font-size: 12px; color: var(--text-muted); margin-left: 4px; }
+.order-row-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.order-row-total { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; }
+.order-status { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
+.order-status.pending { background: rgba(232,197,71,0.1); color: var(--accent); }
+.order-status.paid { background: rgba(78,203,113,0.1); color: var(--success); }
+.order-status.delivered { background: rgba(78,203,113,0.2); color: var(--success); }
