@@ -1,0 +1,11 @@
+{
+  "name": "shopwave-ecommerce",
+  "version": "1.0.0",
+  "description": "Full-stack e-commerce app - React + Node.js + MongoDB",
+  "scripts": {
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "start:backend": "cd backend && npm run dev",
+    "start:frontend": "cd frontend && npm start"
+  },
+  "private": true
+}

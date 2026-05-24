@@ -1,0 +1,53 @@
+.cart-layout { display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; }
+
+.cart-items { display: flex; flex-direction: column; gap: 12px; }
+.cart-item {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+}
+.cart-item-img {
+  width: 80px; height: 80px; object-fit: cover;
+  border-radius: var(--radius-sm); flex-shrink: 0;
+}
+.cart-item-info { flex: 1; min-width: 0; }
+.cart-item-name {
+  font-family: var(--font-display); font-weight: 600; font-size: 0.95rem;
+  display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+.cart-item-name:hover { color: var(--accent); }
+.cart-item-category { font-size: 12px; color: var(--text-muted); }
+.cart-item-controls { display: flex; align-items: center; gap: 12px; }
+
+.qty-control-sm {
+  display: flex; align-items: center;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+}
+.qty-control-sm button {
+  background: none; border: none; color: var(--text-primary);
+  width: 32px; height: 32px; font-size: 16px; cursor: pointer;
+  transition: background var(--transition);
+}
+.qty-control-sm button:hover { background: var(--bg-elevated); }
+.qty-control-sm span {
+  padding: 0 12px; font-weight: 600; font-size: 14px;
+  border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+}
+.cart-item-price { font-family: var(--font-display); font-weight: 700; min-width: 60px; text-align: right; }
+.remove-btn { background: none; border: none; color: var(--text-muted); padding: 6px; transition: color var(--transition); }
+.remove-btn:hover { color: var(--danger); }
+
+/* Summary */
+.cart-summary { padding: 24px; position: sticky; top: 90px; }
+.summary-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
+.summary-row { display: flex; justify-content: space-between; font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; }
+.summary-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+.summary-total { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: var(--text-primary); }
+.free-shipping-note { font-size: 12px; color: var(--accent); margin-top: 8px; }
+
+@media (max-width: 768px) {
+  .cart-layout { grid-template-columns: 1fr; }
+  .cart-item { flex-wrap: wrap; }
+  .cart-item-controls { width: 100%; justify-content: space-between; }
+}

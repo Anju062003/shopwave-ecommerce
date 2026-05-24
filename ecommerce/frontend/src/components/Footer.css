@@ -1,0 +1,9 @@
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 0;
+  margin-top: auto;
+}
+.footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.footer-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; }
+.footer-logo span { color: var(--accent); }
+.footer-copy { font-size: 13px; color: var(--text-muted); }
