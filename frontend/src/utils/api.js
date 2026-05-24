@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || '/api',
+  baseURL: process.env.REACT_APP_API_URL || 'https://shopwave-ecommerce-gs82.onrender.com',
 });
 
 // Attach JWT token to every request if present
