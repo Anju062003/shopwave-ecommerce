@@ -24,7 +24,10 @@ export default function Navbar() {
         </Link>
 
         <div className="navbar-links">
+
           <Link to="/" className="nav-link">Products</Link>
+          <Link to="/contact" className="nav-link">Contact</Link>
+
           <Link to="/cart" className="nav-link cart-link">
             <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
@@ -49,14 +52,30 @@ export default function Navbar() {
               </button>
               {menuOpen && (
                 <div className="dropdown-menu">
-                  <Link to="/orders" className="dropdown-item" onClick={() => setMenuOpen(false)}>My Orders</Link>
-                  <button className="dropdown-item" onClick={handleLogout}>Logout</button>
+                  <Link to="/orders" className="dropdown-item" onClick={() => setMenuOpen(false)}>
+                    My Orders
+                  </Link>
+                  <Link to="/contact" className="dropdown-item" onClick={() => setMenuOpen(false)}>
+                    Contact
+                  </Link>
+
+                  {/* Admin Dashboard - only visible to admin users */}
+                  {user?.isAdmin && (
+                    <Link to="/admin" className="dropdown-item admin-link" onClick={() => setMenuOpen(false)}>
+                      ⚙️ Admin Dashboard
+                    </Link>
+                  )}
+
+                  <button className="dropdown-item" onClick={handleLogout}>
+                    Logout
+                  </button>
                 </div>
               )}
             </div>
           ) : (
             <Link to="/login" className="btn btn-primary btn-sm">Sign In</Link>
           )}
+
         </div>
       </div>
     </nav>

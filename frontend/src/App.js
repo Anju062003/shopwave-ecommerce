@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
+import Admin from './pages/Admin';
+import Contact from './pages/Contact';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail';
@@ -30,6 +32,8 @@ export default function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/order-success/:id" element={<OrderSuccess />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/admin" element={<Admin />} />
               </Routes>
             </main>
             <Footer />
