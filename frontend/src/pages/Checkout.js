@@ -41,7 +41,7 @@ export default function Checkout() {
         taxPrice: tax,
         totalPrice: total,
       };
-      const { data } = await API.post('/orders', orderData);
+      const { data } = await API.post('/api/orders', orderData);
       clearCart();
       navigate(`/order-success/${data._id}`);
     } catch (err) {
