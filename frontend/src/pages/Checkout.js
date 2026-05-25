@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import API from '../utils/api';
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import './Checkout.css';
 
 export default function Checkout() {
@@ -21,11 +22,15 @@ export default function Checkout() {
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async () => {
+  const validateForm = () => {
     if (!form.address || !form.city || !form.postalCode || !form.country) {
       setError('Please fill all shipping fields.');
-      return;
+      return false;
     }
+    return true;
+  };
+
+  const placeOrder = async (paymentResult = null) => {
     try {
       setLoading(true);
       setError('');
@@ -36,6 +41,7 @@ export default function Checkout() {
         })),
         shippingAddress: form,
         paymentMethod,
+        paymentResult,
         itemsPrice: cartTotal,
         shippingPrice: shipping,
         taxPrice: tax,
@@ -49,6 +55,11 @@ export default function Checkout() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+    await placeOrder();
   };
 
   if (cartItems.length === 0) {
@@ -87,7 +98,7 @@ export default function Checkout() {
 
             <div className="card" style={{padding: 28, marginTop: 16}}>
               <h3 className="section-title">Payment Method</h3>
-              {['Cash on Delivery', 'Credit Card (Demo)', 'PayPal (Demo)'].map((method) => (
+              {['Cash on Delivery', 'PayPal'].map((method) => (
                 <label key={method} className={`payment-option ${paymentMethod === method ? 'selected' : ''}`}>
                   <input type="radio" name="payment" value={method}
                     checked={paymentMethod === method}
@@ -95,6 +106,40 @@ export default function Checkout() {
                   <span>{method}</span>
                 </label>
               ))}
+
+              {paymentMethod === 'PayPal' && (
+                <div style={{marginTop: 20}}>
+                  <PayPalScriptProvider options={{
+                    "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID,
+                    currency: "USD"
+                  }}>
+                    <PayPalButtons
+                      style={{ layout: "vertical" }}
+                      disabled={!form.address || !form.city || !form.postalCode || !form.country}
+                      createOrder={(data, actions) => {
+                        if (!validateForm()) return;
+                        return actions.order.create({
+                          purchase_units: [{
+                            amount: { value: total.toFixed(2) }
+                          }]
+                        });
+                      }}
+                      onApprove={async (data, actions) => {
+                        const details = await actions.order.capture();
+                        await placeOrder({
+                          id: details.id,
+                          status: details.status,
+                          email: details.payer.email_address,
+                          updateTime: details.update_time,
+                        });
+                      }}
+                      onError={(err) => {
+                        setError('PayPal payment failed. Please try again.');
+                      }}
+                    />
+                  </PayPalScriptProvider>
+                </div>
+              )}
             </div>
           </div>
 
@@ -112,17 +157,19 @@ export default function Checkout() {
                 </div>
               ))}
             </div>
-            <div className="summary-divider" style={{borderTop:'1px solid var(--border)', margin:'16px 0'}}/>
+            <div style={{borderTop:'1px solid var(--border)', margin:'16px 0'}}/>
             <div className="summary-row"><span>Subtotal</span><span>${cartTotal.toFixed(2)}</span></div>
             <div className="summary-row"><span>Shipping</span><span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span></div>
             <div className="summary-row"><span>Tax</span><span>${tax.toFixed(2)}</span></div>
             <div style={{borderTop:'1px solid var(--border)', margin:'16px 0'}}/>
-            <div className="summary-row" style={{fontFamily:'var(--font-display)',fontWeight:700,fontSize:'1rem',color:'var(--text-primary)'}}>
+            <div className="summary-row" style={{fontWeight:700,fontSize:'1rem'}}>
               <span>Total</span><span>${total.toFixed(2)}</span>
             </div>
-            <button className="btn btn-primary btn-full" style={{marginTop:20}} onClick={handleSubmit} disabled={loading}>
-              {loading ? 'Placing Order...' : 'Place Order'}
-            </button>
+            {paymentMethod === 'Cash on Delivery' && (
+              <button className="btn btn-primary btn-full" style={{marginTop:20}} onClick={handleSubmit} disabled={loading}>
+                {loading ? 'Placing Order...' : 'Place Order'}
+              </button>
+            )}
           </div>
         </div>
       </div>
