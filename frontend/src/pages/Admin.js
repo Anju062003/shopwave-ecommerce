@@ -31,10 +31,10 @@ export default function Admin() {
     setLoading(true);
     try {
       if (tab === 'products') {
-        const { data } = await API.get('/products');
+        const { data } = await API.get('/api/products');
         setProducts(data);
       } else {
-        const { data } = await API.get('/orders');
+        const { data } = await API.get('/api/orders');
         setOrders(data);
       }
     } catch {}
@@ -56,7 +56,7 @@ export default function Admin() {
   const handleAddProduct = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await API.post('/products', {
+      const { data } = await API.post('/api/products', {
         ...form,
         price: Number(form.price),
         countInStock: Number(form.countInStock)
