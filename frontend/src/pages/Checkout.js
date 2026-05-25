@@ -111,7 +111,7 @@ export default function Checkout() {
                 <div style={{marginTop: 20}}>
                   <PayPalScriptProvider options={{
                     "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID,
-                    currency: "INR",
+                    currency: "USD",
                     intent: "capture",
                     components: "buttons"
                   }}>
