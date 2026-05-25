@@ -12,7 +12,8 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://shopwave-ecommerce-beta.vercel.app',
-    'https://shopwave-ecommerce-git-main-anju-s-projects1.vercel.app'
+    'https://shopwave-ecommerce-git-main-anju-s-projects1.vercel.app',
+    'https://shop.anjuportfolio.xyz'
   ],
   credentials: true,
 }));
