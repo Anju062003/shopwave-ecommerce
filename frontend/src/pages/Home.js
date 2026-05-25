@@ -17,7 +17,7 @@ export default function Home() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const { data } = await API.get('/products');
+      const { data } = await API.get('/api/products');
       setProducts(data);
       setFiltered(data);
     } catch (err) {
@@ -39,7 +39,7 @@ export default function Home() {
   const handleSeed = async () => {
     setSeeding(true);
     try {
-      await API.post('/products/seed');
+      await API.post('/api/products/seed');
       await fetchProducts();
     } catch {
       setError('Failed to seed products.');
