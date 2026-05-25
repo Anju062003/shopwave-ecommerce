@@ -6,6 +6,12 @@ import API from '../utils/api';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import './Checkout.css';
 
+const COUPONS = {
+  'FREESHIP': { type: 'shipping', discount: 100, label: 'Free Shipping!' },
+  'SAVE10': { type: 'percent', discount: 10, label: '10% off!' },
+  'SAVE20': { type: 'percent', discount: 20, label: '20% off!' },
+};
+
 export default function Checkout() {
   const { cartItems, cartTotal, clearCart } = useCart();
   const { user } = useAuth();
@@ -15,12 +21,34 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [coupon, setCoupon] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponMsg, setCouponMsg] = useState('');
 
-  const shipping = cartTotal > 100 ? 0 : 9.99;
-  const tax = cartTotal * 0.08;
-  const total = cartTotal + shipping + tax;
+  const baseShipping = cartTotal > 100 ? 0 : 9.99;
+  const shipping = appliedCoupon?.type === 'shipping' ? 0 : baseShipping;
+  const discount = appliedCoupon?.type === 'percent' ? (cartTotal * appliedCoupon.discount / 100) : 0;
+  const tax = (cartTotal - discount) * 0.08;
+  const total = cartTotal - discount + shipping + tax;
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const applyCoupon = () => {
+    const code = coupon.toUpperCase().trim();
+    if (COUPONS[code]) {
+      setAppliedCoupon({ ...COUPONS[code], code });
+      setCouponMsg(`✅ Coupon applied: ${COUPONS[code].label}`);
+    } else {
+      setAppliedCoupon(null);
+      setCouponMsg('❌ Invalid coupon code');
+    }
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCoupon('');
+    setCouponMsg('');
+  };
 
   const validateForm = () => {
     if (!form.address || !form.city || !form.postalCode || !form.country) {
@@ -97,6 +125,33 @@ export default function Checkout() {
             </div>
 
             <div className="card" style={{padding: 28, marginTop: 16}}>
+              <h3 className="section-title">Coupon Code</h3>
+              <div style={{display:'flex', gap:8}}>
+                <input
+                  className="form-input"
+                  placeholder="Enter coupon code"
+                  value={coupon}
+                  onChange={(e) => setCoupon(e.target.value)}
+                  disabled={!!appliedCoupon}
+                  style={{flex:1}}
+                />
+                {!appliedCoupon ? (
+                  <button className="btn btn-primary" onClick={applyCoupon}>Apply</button>
+                ) : (
+                  <button className="btn btn-outline" onClick={removeCoupon}>Remove</button>
+                )}
+              </div>
+              {couponMsg && (
+                <p style={{marginTop:8, color: appliedCoupon ? '#22c55e' : '#ef4444', fontSize:'0.875rem'}}>
+                  {couponMsg}
+                </p>
+              )}
+              <p style={{marginTop:8, fontSize:'0.75rem', color:'var(--text-muted)'}}>
+                Available codes: FREESHIP, SAVE10, SAVE20
+              </p>
+            </div>
+
+            <div className="card" style={{padding: 28, marginTop: 16}}>
               <h3 className="section-title">Payment Method</h3>
               {['Cash on Delivery', 'PayPal'].map((method) => (
                 <label key={method} className={`payment-option ${paymentMethod === method ? 'selected' : ''}`}>
@@ -161,7 +216,18 @@ export default function Checkout() {
             </div>
             <div style={{borderTop:'1px solid var(--border)', margin:'16px 0'}}/>
             <div className="summary-row"><span>Subtotal</span><span>${cartTotal.toFixed(2)}</span></div>
-            <div className="summary-row"><span>Shipping</span><span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span></div>
+            {discount > 0 && (
+              <div className="summary-row" style={{color:'#22c55e'}}>
+                <span>Discount ({appliedCoupon.discount}%)</span>
+                <span>-${discount.toFixed(2)}</span>
+              </div>
+            )}
+            <div className="summary-row">
+              <span>Shipping</span>
+              <span style={{color: shipping === 0 ? '#22c55e' : 'inherit'}}>
+                {shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}
+              </span>
+            </div>
             <div className="summary-row"><span>Tax</span><span>${tax.toFixed(2)}</span></div>
             <div style={{borderTop:'1px solid var(--border)', margin:'16px 0'}}/>
             <div className="summary-row" style={{fontWeight:700,fontSize:'1rem'}}>
