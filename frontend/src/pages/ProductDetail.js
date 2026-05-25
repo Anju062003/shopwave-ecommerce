@@ -16,7 +16,7 @@ export default function ProductDetail() {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const { data } = await API.get(`/products/${id}`);
+        const { data } = await API.get(`/api/products/${id}`);
         setProduct(data);
       } catch {
         navigate('/');
