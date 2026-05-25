@@ -111,7 +111,9 @@ export default function Checkout() {
                 <div style={{marginTop: 20}}>
                   <PayPalScriptProvider options={{
                     "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID,
-                    currency: "USD"
+                    currency: "USD",
+                    intent: "capture",
+                    components: "buttons"
                   }}>
                     <PayPalButtons
                       style={{ layout: "vertical" }}
