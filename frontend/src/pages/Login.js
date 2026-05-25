@@ -18,7 +18,7 @@ export default function Login() {
     e.preventDefault();
     try {
       setLoading(true); setError('');
-      const { data } = await API.post('/auth/login', { email, password });
+      const { data } = await API.post('/api/auth/login', { email, password });
       login(data);
       navigate('/' + redirect);
     } catch (err) {

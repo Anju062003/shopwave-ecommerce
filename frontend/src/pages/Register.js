@@ -19,7 +19,7 @@ export default function Register() {
     if (form.password.length < 6) { setError('Password must be at least 6 characters.'); return; }
     try {
       setLoading(true); setError('');
-      const { data } = await API.post('/auth/register', { name: form.name, email: form.email, password: form.password });
+      const { data } = await API.post('/api/auth/register', { name: form.name, email: form.email, password: form.password });
       login(data);
       navigate('/');
     } catch (err) {
